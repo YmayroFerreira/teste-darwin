@@ -29,3 +29,11 @@ export interface Origin {
   name: string;
   url: string;
 }
+export interface BasicOption {
+  label: string;
+  value: string;
+}
+export interface Status {
+  color: string;
+  label: string;
+}

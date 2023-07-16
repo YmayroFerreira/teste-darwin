@@ -5,8 +5,16 @@
         <div class="text-h5 q-mt-sm q-mb-xs">
           {{ props.character?.name }}
         </div>
-        <div class="text-overline">Status: {{ props.character?.status }}</div>
-        <div class="text-caption text-grey">
+        <div class="text-overline">
+          <q-chip
+            dense
+            size="sm"
+            v-bind:color="charStatus(props.character?.status).color"
+            >&nbsp;</q-chip
+          >
+          Status: {{ charStatus(props.character?.status).label }}
+        </div>
+        <div class="text-caption text-white">
           Local: {{ props.character?.location.name }}
         </div>
       </q-card-section>
@@ -18,7 +26,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { Character } from './models';
+import { Character, Status } from './models';
 
 export default defineComponent({
   name: 'CardComponent',
@@ -26,9 +34,27 @@ export default defineComponent({
     character: Object as PropType<Character>,
   },
   setup(props) {
+    const charStatus = (status: string | undefined) => {
+      let currentStatus: Status = { color: 'grey', label: 'Desconhecido' };
+      switch (status) {
+        case 'Alive': {
+          currentStatus = { color: 'green', label: 'Vivo' };
+          break;
+        }
+        case 'Dead': {
+          currentStatus = { color: 'red', label: 'Morto' };
+          break;
+        }
+        default: {
+          currentStatus = { color: 'grey', label: 'Desconhecido' };
+          break;
+        }
+      }
+      return currentStatus;
+    };
     return {
+      charStatus,
       props,
-      lorem: 'Lorem ipsum dolor sit amet, blah blah blah',
     };
   },
 });
@@ -36,4 +62,5 @@ export default defineComponent({
 <style lang="sass" scoped>
 .my-card
   width: 350px
+  background-color: #A7CB54
 </style>
