@@ -1,17 +1,28 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <h1>The Rick and Morty</h1>
+    <div class="row justify-center">
+      <div class="col-12">
+        <h1>The Rick and Morty</h1>
+      </div>
+      <CardComponent
+        v-for="(character, index) in CharacterList"
+        v-bind:key="index"
+        v-bind:character="character"
+        class="col-4"
+      />
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
-//import ExampleComponent from 'components/ExampleComponent.vue';
+import CardComponent from 'components/CardComponent.vue';
 import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 import { Character } from 'components/models';
+
 export default defineComponent({
   name: 'ListPage',
-  components: {},
+  components: { CardComponent },
   setup() {
     const CharacterList = ref<Character[]>([]);
 
@@ -31,6 +42,7 @@ export default defineComponent({
         });
     };
     return {
+      CharacterList,
       apicall,
     };
   },
