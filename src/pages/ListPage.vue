@@ -1,9 +1,6 @@
 <template>
   <q-page class="row items-center justify-evenly">
     <div class="row justify-center">
-      <div class="col-12">
-        <h1>The Rick and Morty</h1>
-      </div>
       <q-input
         outlined
         bottom-slots
@@ -29,16 +26,30 @@
             @click="resetChars"
             class="cursor-pointer"
           />
-          <q-icon name="search" @click="searchChars" class="cursor-pointer" />
+          <q-icon
+            name="search"
+            @click="searchChars(1)"
+            class="cursor-pointer"
+          />
         </template>
       </q-input>
-      <LoadingComponent />
+      <LoadingComponent v-if="loading" class="col-12" />
       <CardComponent
+        v-else
         v-for="(character, index) in CharacterList"
         v-bind:key="index"
         v-bind:character="character"
         class="col-4"
       />
+      <div class="col-12 align-center" v-if="showPages">
+        <PaginationComponent
+          v-model:current="currentPage"
+          :max="maxPage"
+          @first="searchChars(1)"
+          @last="searchChars(maxPage)"
+          @change="(n: number) => searchChars(n)"
+        />
+      </div>
     </div>
   </q-page>
 </template>
@@ -46,16 +57,22 @@
 <script lang="ts">
 import CardComponent from 'components/CardComponent.vue';
 import LoadingComponent from 'components/LoadingComponent.vue';
+import PaginationComponent from 'components/PaginationComponent.vue';
+
 import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 import { Character, BasicOption } from 'components/models';
 
 export default defineComponent({
   name: 'ListPage',
-  components: { CardComponent, LoadingComponent },
+  components: { CardComponent, LoadingComponent, PaginationComponent },
   setup() {
     const CharacterList = ref<Character[]>([]);
     const text = ref('');
+    const loading = ref(false);
+    const currentPage = ref(1);
+    const maxPage = ref(1);
+    const showPages = ref(false);
     const status = ref<BasicOption | null>(null);
     const options = ref<BasicOption[]>([
       {
@@ -76,6 +93,8 @@ export default defineComponent({
       },
     ]);
     const getRandomChars = () => {
+      loading.value = true;
+      showPages.value = false;
       const randomIds: number[] = Array(12) // Documentação mostra que há até 826 personagens
         .fill(undefined)
         .map(() => Math.floor(826 * Math.random()));
@@ -87,10 +106,12 @@ export default defineComponent({
           console.error(error);
         })
         .finally(function () {
-          console.log(CharacterList.value);
+          loading.value = false;
         });
     };
-    const searchChars = () => {
+    const searchChars = (page: number) => {
+      loading.value = true;
+      showPages.value = true;
       let statusQuery = '';
       switch (status.value?.value) {
         case 'Alive': {
@@ -113,16 +134,21 @@ export default defineComponent({
       axios(
         'https://rickandmortyapi.com/api/character/?name=' +
           text.value +
-          statusQuery
+          statusQuery +
+          '&page=' +
+          page
       )
         .then(function (response) {
           CharacterList.value = response.data.results;
+          currentPage.value = page;
+          maxPage.value = response.data.info.pages;
+          showPages.value = true;
         })
         .catch(function (error) {
           console.error(error);
         })
         .finally(function () {
-          console.log(CharacterList.value);
+          loading.value = false;
         });
     };
     const resetChars = () => {
@@ -134,6 +160,10 @@ export default defineComponent({
       status,
       CharacterList,
       options,
+      loading,
+      currentPage,
+      showPages,
+      maxPage,
       getRandomChars,
       searchChars,
       resetChars,

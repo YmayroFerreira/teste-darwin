@@ -29,6 +29,12 @@ export interface Origin {
   name: string;
   url: string;
 }
+export interface CharInfo {
+  count: number;
+  pages: number;
+  next: string;
+  prev: string;
+}
 export interface BasicOption {
   label: string;
   value: string;
