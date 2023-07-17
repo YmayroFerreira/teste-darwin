@@ -8,7 +8,8 @@
         label="Pesquisar"
         maxlength="40"
         dense
-        class="col-12"
+        class="col-12 q-ma-lg"
+        color="green"
       >
         <template v-slot:after>
           <q-select
@@ -17,6 +18,7 @@
             value="value"
             label="Situação"
             style="width: 300px"
+            color="green"
           />
         </template>
         <template v-slot:append>
@@ -25,14 +27,25 @@
             name="close"
             @click="resetChars"
             class="cursor-pointer"
+            color="green"
           />
           <q-icon
             name="search"
             @click="searchChars(1)"
             class="cursor-pointer"
+            color="green"
           />
         </template>
       </q-input>
+      <div class="col-12 align-center" v-if="showPages">
+        <PaginationComponent
+          v-model:current="currentPage"
+          :max="maxPage"
+          @first="searchChars(1)"
+          @last="searchChars(maxPage)"
+          @change="(n: number) => searchChars(n)"
+        />
+      </div>
       <LoadingComponent v-if="loading" class="col-12" />
       <CardComponent
         v-else
@@ -76,7 +89,7 @@ export default defineComponent({
     const status = ref<BasicOption | null>(null);
     const options = ref<BasicOption[]>([
       {
-        label: 'Nenhum',
+        label: '',
         value: 'none',
       },
       {
@@ -149,6 +162,7 @@ export default defineComponent({
         })
         .finally(function () {
           loading.value = false;
+          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
         });
     };
     const resetChars = () => {
