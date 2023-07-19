@@ -71,15 +71,16 @@
 import CardComponent from 'components/CardComponent.vue';
 import LoadingComponent from 'components/LoadingComponent.vue';
 import PaginationComponent from 'components/PaginationComponent.vue';
-
 import { defineComponent, ref } from 'vue';
 import axios from 'axios';
 import { Character, BasicOption } from 'components/models';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   name: 'ListPage',
   components: { CardComponent, LoadingComponent, PaginationComponent },
   setup() {
+    const $q = useQuasar();
     const CharacterList = ref<Character[]>([]);
     const text = ref('');
     const loading = ref(false);
@@ -158,7 +159,11 @@ export default defineComponent({
           showPages.value = true;
         })
         .catch(function (error) {
-          console.error(error);
+          $q.notify({
+            message: 'Buuuurp, al---algo deu errado Morty!!!!!!',
+            caption: error.response.status,
+            color: 'negative',
+          });
         })
         .finally(function () {
           loading.value = false;
