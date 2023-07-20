@@ -10,6 +10,7 @@
         dense
         class="col-12 q-ma-lg"
         color="green"
+        data-cy="search-input"
       >
         <template v-slot:after>
           <q-select
@@ -19,6 +20,7 @@
             label="Situação"
             style="width: 300px"
             color="green"
+            data-cy="search-select"
           />
         </template>
         <template v-slot:append>
@@ -28,12 +30,14 @@
             @click="resetChars"
             class="cursor-pointer"
             color="green"
+            data-cy="search-clean"
           />
           <q-icon
             name="search"
             @click="searchChars(1)"
             class="cursor-pointer"
             color="green"
+            data-cy="search-start"
           />
         </template>
       </q-input>
