@@ -34,7 +34,12 @@
           />
           <q-icon
             name="search"
-            @click="searchChars(1)"
+            @click="
+              () => {
+                currentSearch = text;
+                searchChars(1);
+              }
+            "
             class="cursor-pointer"
             color="green"
             data-cy="search-start"
@@ -47,7 +52,7 @@
           :max="maxPage"
           @first="searchChars(1)"
           @last="searchChars(maxPage)"
-          @change="(n: number) => searchChars(n)"
+          @change="searchChars"
         />
       </div>
       <LoadingComponent v-if="loading" class="col-12" />
@@ -64,7 +69,7 @@
           :max="maxPage"
           @first="searchChars(1)"
           @last="searchChars(maxPage)"
-          @change="(n: number) => searchChars(n)"
+          @change="searchChars"
         />
       </div>
     </div>
@@ -87,6 +92,7 @@ export default defineComponent({
     const $q = useQuasar();
     const CharacterList = ref<Character[]>([]);
     const text = ref('');
+    const currentSearch = ref('');
     const loading = ref(false);
     const currentPage = ref(1);
     const maxPage = ref(1);
@@ -151,7 +157,7 @@ export default defineComponent({
       }
       axios(
         'https://rickandmortyapi.com/api/character/?name=' +
-          text.value +
+          currentSearch.value +
           statusQuery +
           '&page=' +
           page
@@ -187,6 +193,7 @@ export default defineComponent({
       currentPage,
       showPages,
       maxPage,
+      currentSearch,
       getRandomChars,
       searchChars,
       resetChars,
