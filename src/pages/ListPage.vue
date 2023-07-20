@@ -48,7 +48,7 @@
           :max="maxPage"
           @first="searchChars(1)"
           @last="searchChars(maxPage)"
-          @change="(n: number) => searchChars(n)"
+          @change="searchChars"
         />
       </div>
       <LoadingComponent v-if="loading" class="col-12" />
@@ -65,7 +65,7 @@
           :max="maxPage"
           @first="searchChars(1)"
           @last="searchChars(maxPage)"
-          @change="(n: number) => searchChars(n)"
+          @change="searchChars"
         />
       </div>
     </div>
