@@ -1,24 +1,29 @@
 <template>
-  <q-card class="my-card" flat bordered>
+  <q-card class="my-card" flat bordered data-cy="character-card">
     <q-card-section horizontal>
       <q-card-section class="q-pt-xs">
-        <div class="text-h5 q-mt-sm q-mb-xs">
+        <div class="text-h5 q-mt-sm q-mb-xs" data-cy="character-name">
           {{ props.character?.name }}
         </div>
-        <div class="text-overline">
+        <div class="text-overline" data-cy="character-status">
           <q-chip
             dense
             size="sm"
             v-bind:color="charStatus(props.character?.status).color"
-            >&nbsp;</q-chip
+            data-cy="character-status-chip"
           >
+            &nbsp;
+          </q-chip>
           Status: {{ charStatus(props.character?.status).label }}
         </div>
-        <div class="text-caption text-white">
+        <div class="text-caption text-white" data-cy="character-status-place">
           Local: {{ props.character?.location.name }}
         </div>
       </q-card-section>
-      <q-card-section class="col-5 flex flex-center">
+      <q-card-section
+        class="col-5 flex flex-center"
+        data-cy="character-status-img"
+      >
         <q-img class="rounded-borders" v-bind:src="props.character?.image" />
       </q-card-section>
     </q-card-section>

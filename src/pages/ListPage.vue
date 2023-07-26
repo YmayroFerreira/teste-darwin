@@ -62,6 +62,7 @@
         v-bind:key="index"
         v-bind:character="character"
         class="col-4"
+        :data-cy="'card-item-' + index"
       />
       <div class="col-12 align-center" v-if="showPages">
         <PaginationComponent
